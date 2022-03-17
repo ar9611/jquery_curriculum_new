@@ -103,13 +103,18 @@
       $(function() {
         $('.select').change(function() {
           var sort=$(this).val();
-          $('.list li').each(function(index,element) {
-            if(sort == 'all' || $(element).data('category-type') == sort) {
-              $(this).show();
+          if(sort==='all') {
+            $('.list li').show();
+          } else {
+            $('.list li').each(function(index,element) {
+            if($(element).data('category-type') == sort) {
+              $(element).show();
             } else {
-              $(this).hide();
+              $(element).hide();
             }
           });
+          }
+          
         });
       });
     </script>
