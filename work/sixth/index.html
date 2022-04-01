@@ -93,7 +93,7 @@
       $(function() {
 
         var keyword = '';
-        var page = 1;
+        var pageNum = 1;
 
         $('.search__btn').on('click' , function() {
           keyword = $('.search__text__input').val();
@@ -107,11 +107,10 @@
               booksGenreId: '001',
               hits: 20,
               keyword: keyword,
-              page: page
+              page: pageNum
             },
           }).done(function(data) {
-            //通信が成功したとき
-            if (data.hits === 0) {　//一件も取得できなかった
+            if (data.hits === 0) { //一件も取得できなかった
               $('.message').append('検索結果が見つかりませんでした。別のキーワードで探して下さい')
             }
             var itemList = '';
@@ -140,13 +139,18 @@
               + '</div>'
               + '</div>';
             $('.container').append(pager);
+            
           }).fail(function(err) {
             if(err.status === 400) {
               var message = '<p class="error-message">検索文字が入力されていません。</p>';
               $('.message').append(message);
+            } else if(err.status === 429) {
+              var errMassage ='<p class="error-message">リクエスト過多です。しばらく時間を置いてからお試しください。</p>'
+              $('massage').append(errMassage);
             }
           });
         });
+
 
         $(document).on('click', '[data-js="page-next"]', function(e) {
           e.preventDefault(); //aタグのデフォルトの遷移挙動を防ぐ このメソッドがないと次のページが反映されない
@@ -154,7 +158,7 @@
           $('.lists').empty();
           $('.pager').remove();
 
-          page ++;
+          pageNum ++;
           $.ajax({
             url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
             type: 'GET',
@@ -165,7 +169,7 @@
               booksGenreId: '001',
               hits: 20,
               keyword: keyword,
-              page: page
+              page: pageNum
             },
           }).done(function(data) {
             //通信が成功したとき
@@ -179,7 +183,7 @@
               + '<a href=" ' + book.Item.itemUrl + ' " class="lists__item__link" target="_blank">'
               + '<img src=" ' + book.Item.largeImageUrl + ' " class="lists__item__img" alt="">'
               + '<p class="lists__item__detail">作品名：' + book.Item.title + '</p>'
-              + '<p class="lists__item__detail">作者　 : ' + book.Item.author + '</p>'
+              + '<p class="lists__item__detail">作者    : ' + book.Item.author + '</p>'
               + '<p class="lists__item__detail">出版社：' + book.Item.publisherName + '</p>'
               + '</a>'
               + '</div>'
