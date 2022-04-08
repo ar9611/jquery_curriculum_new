@@ -96,6 +96,21 @@
         $('.search__btn').on('click', function() {
           keyword = $('.search__text__input').val();
           showItems();
+          deletePage();
+        });
+
+        $(document).on('click', '[data-js="page-next"]', function(e) {
+          showPage(e);
+          deletePage();
+          pageNum ++;
+          showItems();
+        });
+
+        $(document).on('click', '[data-js="page-prev"]', function(e) {
+          showPage(e);
+          deletePage();
+          pageNum --;
+          showItems();
         });
 
         function showItems() {
@@ -129,7 +144,6 @@
             })
             $('.lists').append(itemList);
 
-            //ページャー
             $('.lists').after('<div class="pager" data-js="pager">'
               + '<div class="counter">'
               + '<span class="counter-current"> ' + data.page + ' </span>/<span class="counter-all"> ' + data.pageCount + ' </span>'
@@ -140,13 +154,16 @@
               + '</div>'
               + '</div>'
             );
+
             if(data.page === data.pageCount) {
-              $('[data-js="page-next"]').addClass('disabled');
+            $('[data-js="page-next"]').addClass('disabled');
+              debugger;
             }
+
           }).fail(function(jqXHR) {
             switch(jqXHR.status) {
               case 400:
-              errorMessage.append('<p class="error-message">' + '検索文字が入力されていません。'  + '</p>');
+              errorMessage.append('<p class="error-message">' + '検索文字が入力されていません。' + '</p>');
                 break;
               case 429:
               errorMessage.append( '<p class="error-message">' + 'リクエスト過多です。しばらく時間を置いてからお試しください。' + '</p>');
@@ -157,24 +174,19 @@
           });
         };
 
-        $(document).on('click', '[data-js="page-next"]', function(e) {
+        function showPage(e) {
           e.preventDefault();
-          if($(this).hasClass('disabled'))return;
-          $('.lists').empty();
-          $('.pager').remove();
-          pageNum ++;
-          showItems();
-        });
+          //if($(this).hasClass('disabled'))return;
+        };
 
-        $(document).on('click', '[data-js="page-prev"]', function(e) {
-          e.preventDefault();
-          if($(this).hasClass('disabled'))return;
+        function deletePage() {
           $('.lists').empty();
           $('.pager').remove();
-          pageNum --;
-          showItems();
-        });
+          errorMessage.empty();
+        };
       });
+//ぺージャグレーアウト
+          
       
 /*
       $(function() {
@@ -292,7 +304,6 @@
               $('[data-js="page-next"]').addClass('disabled');
             }
           }).fail(function(err) {
-          
           });
         });
 
@@ -352,10 +363,8 @@
               $('[data-js="page-next"]').addClass('disabled');
             }
           }).fail(function(err) {
-          
           });
         });
-
       }); */
     </script>
   </body>
