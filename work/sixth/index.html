@@ -129,8 +129,9 @@
               page: pageNum
             },
           }).done(function(data) {
-            if (data.hits === 0) {
-              errorMessage.append('検索結果が見つかりませんでした。別のキーワードで探して下さい')
+            if (data.count === 0) {
+              errorMessage.append('検索結果が見つかりませんでした。' + '<br>' + '別のキーワードで検索して下さい。')
+              showErrorMassage();
             }
             var itemList = '';
             $.each(data.Items, function(index, book) {
@@ -184,6 +185,7 @@
           $('.pager').remove();
           errorMessage.empty();
         };
+
       });
     </script>
   </body>
