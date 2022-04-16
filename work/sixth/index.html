@@ -131,7 +131,7 @@
               page: pageNum
             },
           }).done(function(data) {
-            if (data.count === 0) {
+            if (pageNum === 0) {
               errorMessage.append('検索結果が見つかりませんでした。' + '<br>' + '別のキーワードで検索して下さい。')
               return;
             }
@@ -152,17 +152,7 @@
             $('.lists').append(itemList);
 
             lastPage = data.pageCount;
-            $('.lists').after('<div class="pager" data-js="pager">'
-              + '<div class="counter">'
-              + '<span class="counter-current"> ' + data.page + ' </span>/<span class="counter-all"> ' + data.pageCount + ' </span>'
-              + '</div>'
-              + '<div class="btn-wrapper">'
-              + '<a class="btn-item" data-js="page-prev" href="">前へ</a>'
-              + '<a class="btn-item" data-js="page-next" href="">次へ</a>'
-              + '</div>'
-              + '</div>'
-            );
-            
+            pager();
             disabledPage();
 
           }).fail(function(jqXHR) {
@@ -183,6 +173,19 @@
           $('.lists').empty();
           $('.pager').remove();
           errorMessage.empty();
+        };
+
+        function pager() {
+          $('.lists').after('<div class="pager" data-js="pager">'
+            + '<div class="counter">'
+            + '<span class="counter-current"> ' + pageNum + ' </span>/<span class="counter-all"> ' + lastPage + ' </span>'
+            + '</div>'
+            + '<div class="btn-wrapper">'
+            + '<a class="btn-item" data-js="page-prev" href="">前へ</a>'
+            + '<a class="btn-item" data-js="page-next" href="">次へ</a>'
+            + '</div>'
+            + '</div>'
+          );
         };
 
         function disabledPage() {
