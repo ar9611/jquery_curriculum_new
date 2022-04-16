@@ -131,26 +131,12 @@
               page: pageNum
             },
           }).done(function(data) {
-            if (pageNum === 0) {
+            if (data.pageCount === 0) {
               errorMessage.append('検索結果が見つかりませんでした。' + '<br>' + '別のキーワードで検索して下さい。')
               return;
             }
 
-            var itemList = '';
-            $.each(data.Items, function(index, book) {
-              itemList += '<li class="lists__item">'
-              + '<div class="lists__item__inner">'
-              + '<a href=" ' + book.Item.itemUrl + ' " class="lists__item__link" target="_blank">'
-              + '<img src=" ' + book.Item.largeImageUrl + ' " class="lists__item__img" alt="">'
-              + '<p class="lists__item__detail">作品名：' + book.Item.title + '</p>'
-              + '<p class="lists__item__detail">作者　 : ' + book.Item.author + '</p>'
-              + '<p class="lists__item__detail">出版社：' + book.Item.publisherName + '</p>'
-              + '</a>'
-              + '</div>'
-              + '</li>';
-            })
-            $('.lists').append(itemList);
-
+            showItem(data);
             lastPage = data.pageCount;
             pager();
             disabledPage();
@@ -173,6 +159,24 @@
           $('.lists').empty();
           $('.pager').remove();
           errorMessage.empty();
+        };
+
+        function showItem(data) {
+          var itemList = '';
+            $.each(data.Items, function(index, book) {
+              //debugger;
+              itemList += '<li class="lists__item">'
+              + '<div class="lists__item__inner">'
+              + '<a href=" ' + book.Item.itemUrl + ' " class="lists__item__link" target="_blank">'
+              + '<img src=" ' + book.Item.largeImageUrl + ' " class="lists__item__img" alt="">'
+              + '<p class="lists__item__detail">作品名：' + book.Item.title + '</p>'
+              + '<p class="lists__item__detail">作者　 : ' + book.Item.author + '</p>'
+              + '<p class="lists__item__detail">出版社：' + book.Item.publisherName + '</p>'
+              + '</a>'
+              + '</div>'
+              + '</li>';
+            })
+            $('.lists').append(itemList);
         };
 
         function pager() {
