@@ -92,10 +92,12 @@
         var keyword = '';
         var pageNum = 1;
         var firstPage = 1;
+        var lastPage = 1;
         var errorMessage = $('.message');
 
         $('.search__btn').on('click', function() {
           keyword = $('.search__text__input').val();
+          pageNum = firstPage;
           showItems();
           clearPage();
         });
@@ -131,8 +133,9 @@
           }).done(function(data) {
             if (data.count === 0) {
               errorMessage.append('検索結果が見つかりませんでした。' + '<br>' + '別のキーワードで検索して下さい。')
-              showErrorMassage();
+              return;
             }
+
             var itemList = '';
             $.each(data.Items, function(index, book) {
               itemList += '<li class="lists__item">'
@@ -148,6 +151,7 @@
             })
             $('.lists').append(itemList);
 
+            lastPage = data.pageCount;
             $('.lists').after('<div class="pager" data-js="pager">'
               + '<div class="counter">'
               + '<span class="counter-current"> ' + data.page + ' </span>/<span class="counter-all"> ' + data.pageCount + ' </span>'
@@ -158,13 +162,8 @@
               + '</div>'
               + '</div>'
             );
-
-            if(data.page === firstPage) {
-            $('[data-js="page-prev"]').addClass('disabled');
-            }
-            if(data.page === data.pageCount) {
-            $('[data-js="page-next"]').addClass('disabled');
-            }
+            
+            disabledPage();
 
           }).fail(function(jqXHR) {
             switch(jqXHR.status) {
@@ -186,6 +185,14 @@
           errorMessage.empty();
         };
 
+        function disabledPage() {
+          if(pageNum === firstPage) {
+            $('[data-js="page-prev"]').addClass('disabled');
+            }
+          if(pageNum === lastPage) {
+            $('[data-js="page-next"]').addClass('disabled');
+          }
+        };
       });
     </script>
   </body>
